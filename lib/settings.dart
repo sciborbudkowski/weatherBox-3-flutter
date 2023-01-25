@@ -1,8 +1,7 @@
 import 'secrets.dart' as secrets;
 
 var unsplashApiUrlString =
-    'https://api.unsplash.com/photos/random/?client_id=${secrets.unsplashApiAccessKey}&query=winter,snow,cold&count=30';
-var unsplashApiUrl = Uri.parse(unsplashApiUrlString);
+    'https://api.unsplash.com/photos/random/?client_id=${secrets.unsplashApiAccessKey}&query=%query%&count=30';
 
 var pirateWeatherApiUrlString =
     'https://api.pirateweather.net/forecast/${secrets.pirateWeatherApiKey}/%lat%,%lon%?&units=ca';

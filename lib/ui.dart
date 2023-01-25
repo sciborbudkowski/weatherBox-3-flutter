@@ -1,5 +1,7 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 import 'package:weatherbox/aqi/aqi_model.dart';
 import 'package:weatherbox/location/location_models.dart';
@@ -7,17 +9,21 @@ import 'package:weatherbox/pirate/pirate_models.dart' as pirate;
 import 'package:weatherbox/styles/styles.dart';
 import 'package:weatherbox/pirate/weather_models.dart';
 import 'package:weatherbox/extensions/extensions.dart';
+import 'package:weatherbox/unsplash/unsplash_api.dart';
 
 class MainView extends StatelessWidget {
-  const MainView(
-      {super.key,
-      required this.weather,
-      required this.locationInfo,
-      required this.aqi});
+  const MainView({
+    super.key,
+    required this.weather,
+    required this.locationInfo,
+    required this.aqi,
+    required this.photo,
+  });
 
   final pirate.WeatherModel weather;
   final LocationModel locationInfo;
   final AqiModel aqi;
+  final Photo photo;
 
   static final DateTime now = DateTime.now();
   static final DateFormat formatter = DateFormat('EEEE, dd MMMM yyyy');
@@ -63,25 +69,31 @@ class MainView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            Column(
               children: [
-                Text(currentDate, style: Style.dateTextStyle),
-              ],
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 2.0),
-                  child: Row(
-                    children: [
-                      Text(city, style: Style.locationTextStyle),
-                      city == ''
-                          ? const Text('')
-                          : const Text(', ', style: Style.locationTextStyle),
-                      Text(region, style: Style.locationTextStyle),
-                    ],
-                  ),
-                )
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(currentDate, style: Style.dateTextStyle),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 2.0),
+                      child: Row(
+                        children: [
+                          Text(city, style: Style.locationTextStyle),
+                          city == ''
+                              ? const Text('')
+                              : const Text(', ',
+                                  style: Style.locationTextStyle),
+                          Text(region, style: Style.locationTextStyle),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ],
             ),
             Row(
@@ -112,7 +124,7 @@ class MainView extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 10, bottom: 10),
-                  child: Text(weatherDescription,
+                  child: Text(weatherDescription.toLowerCase(),
                       style: Style.temperatureMinorTextStyle),
                 ),
               ],
@@ -175,7 +187,12 @@ class MainView extends StatelessWidget {
             ),
             HourlyForecastView(hourlyForecast: hourlyForecast),
             DailyForecastView(
-                dailyForecast: weather.daily.data, aqiIcon: aqiForecast)
+                dailyForecast: weather.daily.data, aqiIcon: aqiForecast),
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+              child:
+                  AttributionView(name: photo.username, url: photo.profileUrl),
+            ),
           ],
         ),
       ),
@@ -276,13 +293,15 @@ class DailyForecastView extends StatelessWidget {
     int counter = 0;
 
     for (var item in dailyForecast) {
-      var cell = DailyCellView(forecast: item, aqiIcon: aqiIcon[counter]);
+      var cell = DailyCellView(
+          forecast: item, aqiIcon: aqiIcon[counter], shadeOption: counter);
       dailyCells.add(cell);
-      break;
+      counter++;
     }
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: ListView(
+        physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         padding: const EdgeInsets.all(10.0),
         scrollDirection: Axis.vertical,
@@ -317,101 +336,171 @@ class HourlyCellView extends StatelessWidget {
 
 class DailyCellView extends StatelessWidget {
   const DailyCellView(
-      {super.key, required this.forecast, required this.aqiIcon});
+      {super.key,
+      required this.forecast,
+      required this.aqiIcon,
+      required this.shadeOption});
   final pirate.Datum forecast;
   final String aqiIcon;
+  final int shadeOption;
+
+  @override
+  Widget build(BuildContext context) {
+    Color shadeColor =
+        shadeOption % 2 == 0 ? Colors.transparent : Colors.white10;
+    return Container(
+      color: shadeColor,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Column(
+            children: [
+              Text(
+                forecast.time.toWeekdayName(),
+                style: Style.hourlyTemperatureTextStyle,
+              ),
+              Text(
+                forecast.time.toMonthAndDay(),
+                style: Style.valueTextStyle,
+              ),
+            ],
+          ),
+          Image(
+              image: AssetImage(Weather.getIconFor(forecast.icon)),
+              width: 50,
+              height: 50),
+          Column(
+            children: [
+              Row(
+                children: [
+                  Column(
+                    children: [
+                      const Image(
+                          image:
+                              AssetImage('assets/images/sun_moon/sunrise.png'),
+                          width: 25,
+                          height: 25),
+                      Text(forecast.sunriseTime.toHourAndMinutes(),
+                          style: Style.dateTextStyle),
+                    ],
+                  ),
+                  const Divider(
+                    height: 1,
+                    thickness: 5,
+                    indent: 5,
+                  ),
+                  Column(
+                    children: [
+                      const Image(
+                          image:
+                              AssetImage('assets/images/sun_moon/sunset.png'),
+                          width: 25,
+                          height: 25),
+                      Text(forecast.sunsetTime.toHourAndMinutes(),
+                          style: Style.dateTextStyle),
+                    ],
+                  ),
+                ],
+              )
+            ],
+          ),
+          Column(
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    color: Colors.white54,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                      child: Text(
+                        '${forecast.temperatureHigh.toStringAsFixed(0)} °C',
+                        style: Style.dateTextStyle,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    color: Colors.white24,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                      child: Text(
+                        '${forecast.temperatureLow.toStringAsFixed(0)} °C',
+                        style: Style.dateTextStyle,
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+          Column(
+            children: [
+              Image(
+                  image: AssetImage(Beaufort.getIconFor(forecast.windSpeed)),
+                  width: 25,
+                  height: 25),
+              Text(
+                '${forecast.windSpeed.toStringAsFixed(0)} km/h',
+                style: Style.dateTextStyle,
+              ),
+            ],
+          ),
+          Image(image: AssetImage(aqiIcon)),
+        ],
+      ),
+    );
+  }
+}
+
+class AttributionView extends StatelessWidget {
+  const AttributionView({super.key, required this.name, required this.url});
+  final String name;
+  final String url;
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Column(
-          children: [
-            Text(
-              forecast.time.toWeekdayName(),
-              style: Style.hourlyTemperatureTextStyle,
-            ),
-            Text(
-              forecast.time.toMonthAndDay(),
-              style: Style.valueTextStyle,
-            ),
-          ],
+        const Text.rich(
+          TextSpan(
+            style: Style.attributionTextTextStyle,
+            text: 'Photo by ',
+          ),
         ),
-        Image(
-            image: AssetImage(Weather.getIconFor(forecast.icon)),
-            width: 50,
-            height: 50),
-        Column(
-          children: [
-            Row(
-              children: [
-                Column(
-                  children: [
-                    const Image(
-                        image: AssetImage('assets/images/sun_moon/sunrise.png'),
-                        width: 25,
-                        height: 25),
-                    Text(forecast.sunriseTime.toHourAndMinutes(),
-                        style: Style.dateTextStyle),
-                  ],
-                ),
-                const Divider(
-                  height: 1,
-                  thickness: 5,
-                  indent: 5,
-                ),
-                Column(
-                  children: [
-                    const Image(
-                        image: AssetImage('assets/images/sun_moon/sunset.png'),
-                        width: 25,
-                        height: 25),
-                    Text(forecast.sunsetTime.toHourAndMinutes(),
-                        style: Style.dateTextStyle),
-                  ],
-                ),
-              ],
-            )
-          ],
+        Text.rich(TextSpan(
+          style: Style.attributionUrlTextStyle,
+          text: name,
+          recognizer: TapGestureRecognizer()
+            ..onTap = () async {
+              loadUrl(url);
+            },
+        )),
+        const Text.rich(
+          TextSpan(
+            style: Style.attributionTextTextStyle,
+            text: ' / ',
+          ),
         ),
-        Column(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  color: Colors.white54,
-                  child: Text(
-                    '${forecast.temperatureHigh.toStringAsFixed(0)} °C',
-                    style: Style.dateTextStyle,
-                  ),
-                ),
-                Container(
-                  color: Colors.white24,
-                  child: Text(
-                    '${forecast.temperatureLow.toStringAsFixed(0)} °C',
-                    style: Style.dateTextStyle,
-                  ),
-                ),
-              ],
-            )
-          ],
-        ),
-        Column(
-          children: [
-            Image(
-                image: AssetImage(Beaufort.getIconFor(forecast.windSpeed)),
-                width: 25,
-                height: 25),
-            Text(
-              '${forecast.windSpeed.toStringAsFixed(0)} km/h',
-              style: Style.dateTextStyle,
-            ),
-          ],
-        ),
-        Image(image: AssetImage(aqiIcon)),
+        Text.rich(TextSpan(
+            style: Style.attributionUrlTextStyle,
+            text: 'Unsplash',
+            recognizer: TapGestureRecognizer()
+              ..onTap = () async {
+                loadUrl('https://unsplach.com');
+              })),
       ],
     );
+  }
+
+  Future<void> loadUrl(String urlString) async {
+    var url = Uri.parse(urlString);
+    var isUrlLaunchable = await url_launcher.canLaunchUrl(url);
+
+    if (isUrlLaunchable) {
+      await url_launcher.launchUrl(url);
+    } else {
+      print('Cant launch $urlString');
+    }
   }
 }

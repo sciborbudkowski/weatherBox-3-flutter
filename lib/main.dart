@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 
@@ -15,6 +16,9 @@ class WeatherApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Random random = Random();
+    int photoIndex = random.nextInt(30);
+
     return MaterialApp(
       title: 'WeatherBox',
       debugShowCheckedModeBanner: false,
@@ -33,11 +37,15 @@ class WeatherApp extends StatelessWidget {
                   PhotoView(
                     photos: data.photos,
                     isPhotoVisible: true,
+                    photoIndex: photoIndex,
                   ),
-                  MainView(
-                      weather: data.weather,
-                      locationInfo: data.locationInfo,
-                      aqi: data.aqi),
+                  SingleChildScrollView(
+                    child: MainView(
+                        weather: data.weather,
+                        locationInfo: data.locationInfo,
+                        aqi: data.aqi,
+                        photo: data.photos[photoIndex]),
+                  ),
                 ]);
               } else {
                 return const Center(
@@ -52,10 +60,13 @@ class WeatherApp extends StatelessWidget {
 
 class PhotoView extends StatelessWidget {
   const PhotoView(
-      {super.key, required this.photos, required this.isPhotoVisible});
+      {super.key,
+      required this.photos,
+      required this.isPhotoVisible,
+      required this.photoIndex});
 
   final List<Photo> photos;
-  final index = 0;
+  final int photoIndex;
   final bool isPhotoVisible;
 
   @override
@@ -69,10 +80,11 @@ class PhotoView extends StatelessWidget {
         decoration: BoxDecoration(
             image: DecorationImage(
           fit: BoxFit.cover,
-          image: NetworkImage(photos[0].url), //NetworkImage(photos[index].url),
+          image: NetworkImage(
+              photos[photoIndex].url), //NetworkImage(photos[index].url),
         )),
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
+          filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
           child: Container(
             decoration: BoxDecoration(color: Colors.black.withOpacity(0.6)),
           ),

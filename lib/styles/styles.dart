@@ -53,4 +53,16 @@ class Style {
     color: Colors.white,
     fontWeight: FontWeight.w800,
   );
+
+  static const attributionTextTextStyle = TextStyle(
+    fontFamily: 'Nunito',
+    fontSize: 14.0,
+    color: Colors.white,
+  );
+
+  static const attributionUrlTextStyle = TextStyle(
+    fontFamily: 'Nunito',
+    fontSize: 14.0,
+    color: Colors.lightBlue,
+  );
 }

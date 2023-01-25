@@ -53,6 +53,11 @@
 	<string>App needs your current location to provide correct data.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>App needs your current location to provide correct data.</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>https</string>
+		<string>http</string>
+	</array>
 	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
 	<dict>
 		<key>YourPurposeKey</key>

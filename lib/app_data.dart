@@ -22,7 +22,8 @@ class DataModel {
 
 Future<DataModel> getAppData() async {
   final position = await Location.determinePosition();
-  final unsplash = await UnsplashPhoto.fetchPhotos(http.Client());
+  var hemisphere = position.position.latitude >= 0 ? 0 : 1;
+  final unsplash = await UnsplashPhoto.fetchPhotos(http.Client(), hemisphere);
   final weather = await PirateApi.fetchData(position.position);
   final aqi = await AqiApi.fetchData(position.position);
 
