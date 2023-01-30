@@ -58,15 +58,15 @@ class Moon {
     if (phase >= 0 && phase < 0.1) {
       return 'assets/images/sun_moon/moon-new.png';
     } else if (phase >= 0.1 && phase < 0.35) {
-      return 'assets/images/sun_moon/moon-waning-crescent.png';
+      return 'assets/images/sun_moon/moon-waxing-crescent.png';
     } else if (phase >= 0.35 && phase < 0.45) {
-      return 'assets/images/sun_moon/moon-waning-gibbous.png';
+      return 'assets/images/sun_moon/moon-waxing-gibbous.png';
     } else if (phase >= 0.45 && phase < 0.55) {
       return 'assets/images/sun_moon/moon-full.png';
     } else if (phase >= 0.55 && phase < 0.7) {
-      return 'assets/images/sun_moon/moon-waxing-gibbous.png';
+      return 'assets/images/sun_moon/moon-waning-gibbous.png';
     } else if (phase >= 0.7 && phase < 0.85) {
-      return 'assets/images/sun_moon/moon-waxing-crescent.png';
+      return 'assets/images/sun_moon/moon-waning-crescent.png';
     } else if (phase >= 0.85) {
       return 'assets/images/sun_moon/moon-new.png';
     }
@@ -78,6 +78,8 @@ class Moon {
 class UVIndex {
   static String getIconFor(int index) {
     switch (index) {
+      case 0:
+        return 'assets/images/uvindex/uv-index-0.png';
       case 1:
         return 'assets/images/uvindex/uv-index-1.png';
       case 2:
@@ -98,10 +100,8 @@ class UVIndex {
         return 'assets/images/uvindex/uv-index-9.png';
       case 10:
         return 'assets/images/uvindex/uv-index-10.png';
-      case 11:
-        return 'assets/images/uvindex/uv-index-11.png';
       default:
-        return 'assets/images/uvindex/uv-index.png';
+        return 'assets/images/uvindex/uv-index-11.png';
     }
   }
 }

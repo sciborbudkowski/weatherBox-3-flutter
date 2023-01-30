@@ -1,4 +1,7 @@
+import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 extension TimeOperations on int {
   String toHourAndMinutes() {
@@ -17,9 +20,11 @@ extension TimeOperations on int {
     return '$hour:$minute';
   }
 
-  String toWeekdayName() {
+  String toWeekdayName(BuildContext context) {
+    String locale = Localizations.localeOf(context).languageCode;
     var date = DateTime.fromMillisecondsSinceEpoch(this * 1000);
-    var dayName = DateFormat('EEEE').format(date);
+    initializeDateFormatting(locale);
+    var dayName = DateFormat.EEEE(locale).format(date);
 
     return dayName;
   }
@@ -37,5 +42,18 @@ extension TimeOperations on int {
     }
 
     return '$day.$month';
+  }
+}
+
+class UrlParser {
+  static Future<void> loadUrl(String urlToParse) async {
+    var url = Uri.parse(urlToParse);
+    var isUrlLaunchable = await url_launcher.canLaunchUrl(url);
+
+    if (isUrlLaunchable) {
+      await url_launcher.launchUrl(url);
+    } else {
+      print('Can not launch $urlToParse');
+    }
   }
 }
