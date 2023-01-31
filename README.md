@@ -4,4 +4,7 @@ Flutter weather application.
 
 ## Status
 
-Not finished yet.
+Finished.
+
+![Screenshot](/screenshots/screen_1.png)
+
