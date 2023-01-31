@@ -1,7 +1,10 @@
+// To parse this JSON data, do
+//
+//     final weatherModel = weatherModelFromJson(jsonString);
+
 import 'dart:convert';
 
-WeatherModel weatherModelFromJson(String str) =>
-    WeatherModel.fromJson(json.decode(str));
+WeatherModel weatherModelFromJson(String str) => WeatherModel.fromJson(json.decode(str));
 
 String weatherModelToJson(WeatherModel data) => json.encode(data.toJson());
 
@@ -63,7 +66,7 @@ class Currently {
     required this.precipIntensity,
     required this.precipProbability,
     required this.precipIntensityError,
-    required this.precipType,
+    //required this.precipType,
     required this.temperature,
     required this.apparentTemperature,
     required this.dewPoint,
@@ -79,7 +82,7 @@ class Currently {
     this.precipAccumulation,
   });
 
-  num time;
+  int time;
   Summary summary;
   Icon icon;
   int? nearestStormDistance;
@@ -87,7 +90,7 @@ class Currently {
   double precipIntensity;
   double precipProbability;
   double precipIntensityError;
-  PrecipType precipType;
+  //PrecipType precipType;
   double temperature;
   double apparentTemperature;
   double dewPoint;
@@ -105,13 +108,14 @@ class Currently {
   factory Currently.fromJson(Map<String, dynamic> json) => Currently(
         time: json["time"],
         summary: summaryValues.map[json["summary"]]!,
+        //icon: json["icon"],
         icon: iconValues.map[json["icon"]]!,
         nearestStormDistance: json["nearestStormDistance"],
         nearestStormBearing: json["nearestStormBearing"],
         precipIntensity: json["precipIntensity"]?.toDouble(),
         precipProbability: json["precipProbability"]?.toDouble(),
         precipIntensityError: json["precipIntensityError"]?.toDouble(),
-        precipType: precipTypeValues.map[json["precipType"]]!,
+        //precipType: precipTypeValues.map[json["precipType"]]!,
         temperature: json["temperature"]?.toDouble(),
         apparentTemperature: json["apparentTemperature"]?.toDouble(),
         dewPoint: json["dewPoint"]?.toDouble(),
@@ -130,13 +134,13 @@ class Currently {
   Map<String, dynamic> toJson() => {
         "time": time,
         "summary": summaryValues.reverse[summary],
-        "icon": iconValues.reverse[icon],
+        "icon": icon,
         "nearestStormDistance": nearestStormDistance,
         "nearestStormBearing": nearestStormBearing,
         "precipIntensity": precipIntensity,
         "precipProbability": precipProbability,
         "precipIntensityError": precipIntensityError,
-        "precipType": precipTypeValues.reverse[precipType],
+        //"precipType": precipTypeValues.reverse[precipType],
         "temperature": temperature,
         "apparentTemperature": apparentTemperature,
         "dewPoint": dewPoint,
@@ -153,37 +157,22 @@ class Currently {
       };
 }
 
-enum Icon {
-  CLOUDY,
-  CLEAR_DAY,
-  CLEAR_NIGHT,
-  PARTLY_CLOUDY_NIGHT,
-  PARTLY_CLOUDY_DAY,
-  FOG,
-  RAIN,
-  SNOW
-}
+enum Icon { NONE, SNOW, RAIN, CLOUDY, PARTLY_CLOUDY_DAY, CLEAR_DAY, FOG, WIND, PARTLY_CLOUDY_NIGHT, CLEAR_NIGHT }
 
 final iconValues = EnumValues({
-  "clear-day": Icon.CLEAR_DAY,
-  "clear-night": Icon.CLEAR_NIGHT,
-  "cloudy": Icon.CLOUDY,
-  "fog": Icon.FOG,
-  "partly-cloudy-night": Icon.PARTLY_CLOUDY_NIGHT,
-  "partly-cloudy-day": Icon.PARTLY_CLOUDY_DAY,
+  "none": Icon.NONE,
   "rain": Icon.RAIN,
   "snow": Icon.SNOW,
+  "cloudy": Icon.CLOUDY,
+  "partly-cloudy-day": Icon.PARTLY_CLOUDY_DAY,
+  "clear-day": Icon.CLEAR_DAY,
+  "fog": Icon.FOG,
+  "wind": Icon.WIND,
+  "partly-cloudy-night": Icon.PARTLY_CLOUDY_NIGHT,
+  "clear-night": Icon.CLEAR_NIGHT,
 });
 
-enum PrecipType { NONE, RAIN, SNOW }
-
-final precipTypeValues = EnumValues({
-  "none": PrecipType.NONE,
-  "rain": PrecipType.RAIN,
-  "snow": PrecipType.SNOW
-});
-
-enum Summary { CLOUDY, CLEAR, PARTLY_CLOUDY, FOG, RAIN, SNOW }
+enum Summary { CLEAR, CLOUDY, FOG, RAIN, WINDY, PARTLY_CLOUDY, SNOW }
 
 final summaryValues = EnumValues({
   "Clear": Summary.CLEAR,
@@ -191,7 +180,8 @@ final summaryValues = EnumValues({
   "Fog": Summary.FOG,
   "Partly Cloudy": Summary.PARTLY_CLOUDY,
   "Rain": Summary.RAIN,
-  "Snow": Summary.SNOW
+  "Snow": Summary.SNOW,
+  "Windy": Summary.WINDY
 });
 
 class Daily {
@@ -231,7 +221,7 @@ class Datum {
     required this.precipIntensityMaxTime,
     required this.precipProbability,
     required this.precipAccumulation,
-    required this.precipType,
+    //required this.precipType,
     required this.temperatureHigh,
     required this.temperatureHighTime,
     required this.temperatureLow,
@@ -245,6 +235,7 @@ class Datum {
     required this.pressure,
     required this.windSpeed,
     required this.windGust,
+    required this.windGustTime,
     required this.windBearing,
     required this.cloudCover,
     required this.uvIndex,
@@ -271,7 +262,7 @@ class Datum {
   int precipIntensityMaxTime;
   double precipProbability;
   double precipAccumulation;
-  String precipType;
+  //PrecipType precipType;
   double temperatureHigh;
   int temperatureHighTime;
   double temperatureLow;
@@ -285,6 +276,7 @@ class Datum {
   double pressure;
   double windSpeed;
   double windGust;
+  int windGustTime;
   double windBearing;
   double cloudCover;
   double uvIndex;
@@ -311,7 +303,7 @@ class Datum {
         precipIntensityMaxTime: json["precipIntensityMaxTime"],
         precipProbability: json["precipProbability"]?.toDouble(),
         precipAccumulation: json["precipAccumulation"]?.toDouble(),
-        precipType: json["precipType"],
+        //precipType: precipTypeValues.map[json["precipType"]]!,
         temperatureHigh: json["temperatureHigh"]?.toDouble(),
         temperatureHighTime: json["temperatureHighTime"],
         temperatureLow: json["temperatureLow"]?.toDouble(),
@@ -325,6 +317,7 @@ class Datum {
         pressure: json["pressure"]?.toDouble(),
         windSpeed: json["windSpeed"]?.toDouble(),
         windGust: json["windGust"]?.toDouble(),
+        windGustTime: json["windGustTime"],
         windBearing: json["windBearing"]?.toDouble(),
         cloudCover: json["cloudCover"]?.toDouble(),
         uvIndex: json["uvIndex"]?.toDouble(),
@@ -352,7 +345,7 @@ class Datum {
         "precipIntensityMaxTime": precipIntensityMaxTime,
         "precipProbability": precipProbability,
         "precipAccumulation": precipAccumulation,
-        "precipType": precipType,
+        //"precipType": precipTypeValues.reverse[precipType],
         "temperatureHigh": temperatureHigh,
         "temperatureHighTime": temperatureHighTime,
         "temperatureLow": temperatureLow,
@@ -366,6 +359,7 @@ class Datum {
         "pressure": pressure,
         "windSpeed": windSpeed,
         "windGust": windGust,
+        "windGustTime": windGustTime,
         "windBearing": windBearing,
         "cloudCover": cloudCover,
         "uvIndex": uvIndex,
@@ -448,13 +442,12 @@ class Hourly {
   factory Hourly.fromJson(Map<String, dynamic> json) => Hourly(
         summary: summaryValues.map[json["summary"]]!,
         icon: iconValues.map[json["icon"]]!,
-        data: List<Currently>.from(
-            json["data"].map((x) => Currently.fromJson(x))),
+        data: List<Currently>.from(json["data"].map((x) => Currently.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "summary": summaryValues.reverse[summary],
-        "icon": iconValues.reverse[icon],
+        "icon": icon,
         "data": List<dynamic>.from(data.map((x) => x.toJson())),
       };
 }

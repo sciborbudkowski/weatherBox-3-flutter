@@ -4,6 +4,7 @@ import 'dart:math';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:weatherbox/styles/styles.dart';
 
 import 'package:weatherbox/unsplash/unsplash_api.dart';
 import 'package:weatherbox/ui.dart';
@@ -32,11 +33,9 @@ class _WeatherApp extends State<WeatherApp> {
   void initState() {
     timer = Timer.periodic(Duration(seconds: intervalBetweenPhotos), (timer) {
       setState(() {
-        print('TIMER setState');
         isPhotoVisible = false;
         sleep(const Duration(microseconds: 2500));
         photoIndex = Random().nextInt(downloadedPhotos);
-        print('...changing photo to $photoIndex');
         isPhotoVisible = true;
       });
     });
@@ -62,8 +61,22 @@ class _WeatherApp extends State<WeatherApp> {
             isDataLoaded = true;
             return getStack();
           } else {
-            return const Center(
-              child: CircularProgressIndicator(),
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Image(image: AssetImage('assets/images/app_icon.png'), width: 100, height: 100),
+                  Text('weatherBox', style: Style.appNameTextStyle),
+                  Padding(
+                    padding: EdgeInsets.only(top: 20, bottom: 10),
+                  ),
+                  CircularProgressIndicator(),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Text('loading weather data...', style: Style.attributionUrlTextStyle),
+                  ),
+                ],
+              ),
             );
           }
         }));
@@ -78,10 +91,7 @@ class _WeatherApp extends State<WeatherApp> {
       ),
       SingleChildScrollView(
         child: MainView(
-            weather: data.weather,
-            locationInfo: data.locationInfo,
-            aqi: data.aqi,
-            photo: data.photos[photoIndex]),
+            weather: data.weather, locationInfo: data.locationInfo, aqi: data.aqi, photo: data.photos[photoIndex]),
       ),
     ]);
   }
@@ -105,11 +115,7 @@ class _WeatherApp extends State<WeatherApp> {
 }
 
 class PhotoView extends StatelessWidget {
-  const PhotoView(
-      {super.key,
-      required this.photos,
-      required this.isPhotoVisible,
-      required this.photoIndex});
+  const PhotoView({super.key, required this.photos, required this.isPhotoVisible, required this.photoIndex});
 
   final List<Photo> photos;
   final int photoIndex;
@@ -117,16 +123,10 @@ class PhotoView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('In PhotoView index is $photoIndex');
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
-      decoration: BoxDecoration(
-          image: DecorationImage(
-        fit: BoxFit.cover,
-        image: NetworkImage(
-            photos[photoIndex].url), //NetworkImage(photos[index].url),
-      )),
+      decoration: BoxDecoration(image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(photos[photoIndex].url))),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
         child: Container(

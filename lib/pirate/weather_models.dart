@@ -115,16 +115,18 @@ class Weather {
         return 'assets/images/weather_icons/weather_clearSky-day.png';
       case pm.Icon.CLEAR_NIGHT:
         return 'assets/images/weather_icons/weather_clearSky-night.png';
-      case pm.Icon.PARTLY_CLOUDY_DAY:
-        return 'assets/images/weather_icons/weather_brokenClouds-day.png';
       case pm.Icon.PARTLY_CLOUDY_NIGHT:
         return 'assets/images/weather_icons/weather_brokenClouds-night.png';
       case pm.Icon.FOG:
         return 'assets/images/weather_icons/weather_mist-day.png';
+      case pm.Icon.PARTLY_CLOUDY_DAY:
+        return 'assets/images/weather_icons/weather_brokenClouds-day.png';
       case pm.Icon.RAIN:
         return 'assets/images/weather_icons/weather_rain-day.png';
       case pm.Icon.SNOW:
         return 'assets/images/weather_icons/weather_snow-day.png';
+      default:
+        return '';
     }
   }
 
@@ -136,23 +138,24 @@ class Weather {
         return 'Pogodnie';
       case pm.Icon.CLEAR_NIGHT:
         return 'Pogodnie';
-      case pm.Icon.PARTLY_CLOUDY_DAY:
-        return 'Częściowe zachmurzenie';
       case pm.Icon.PARTLY_CLOUDY_NIGHT:
         return 'Częściowe zachmurzenie';
       case pm.Icon.FOG:
         return 'Mglisto';
+      case pm.Icon.PARTLY_CLOUDY_DAY:
+        return 'Częściowe zachmurzenie';
       case pm.Icon.RAIN:
         return 'Deszczowo';
       case pm.Icon.SNOW:
         return 'Opady śniegu';
+      default:
+        return '';
     }
   }
 }
 
 class HourlyForecastModel {
-  const HourlyForecastModel(
-      {required this.hour, required this.icon, required this.temperature});
+  const HourlyForecastModel({required this.hour, required this.icon, required this.temperature});
 
   final int hour;
   final pm.Icon icon;

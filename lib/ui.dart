@@ -42,10 +42,7 @@ class MainView extends StatelessWidget {
 
     var hourlyForecast = <HourlyForecastModel>[];
     for (var item in weather.hourly.data) {
-      hourlyForecast.add(HourlyForecastModel(
-          hour: item.time.toInt(),
-          icon: item.icon,
-          temperature: item.temperature));
+      hourlyForecast.add(HourlyForecastModel(hour: item.time.toInt(), icon: item.icon, temperature: item.temperature));
     }
 
     var aqiForecast = <String>[];
@@ -67,29 +64,21 @@ class MainView extends StatelessWidget {
                 windSpeed: Beaufort.getIconFor(weather.currently.windSpeed),
                 airPollution: Aqi.getIconFor(aqi.list[0].main.aqi),
                 currentWeather: Weather.getIconFor(weather.currently.icon),
-                uvIndex:
-                    UVIndex.getIconFor((weather.currently.uvIndex).toInt()),
+                uvIndex: UVIndex.getIconFor((weather.currently.uvIndex).toInt()),
                 moonPhase: Moon.getIconFor(weather.daily.data[0].moonPhase)),
-            WeatherDescriptionView(
-                description:
-                    Weather.getDescriptionPLFor(weather.currently.icon)),
+            WeatherDescriptionView(description: Weather.getDescriptionPLFor(weather.currently.icon)),
             WeatherTextValues(
                 windSpeedValue: weather.currently.windSpeed.toStringAsFixed(0),
-                temperatureValue:
-                    weather.currently.temperature.toStringAsFixed(0),
-                humidityValue:
-                    (weather.currently.humidity * 100).toStringAsFixed(0),
+                temperatureValue: weather.currently.temperature.toStringAsFixed(0),
+                humidityValue: (weather.currently.humidity * 100).toStringAsFixed(0),
                 pressureValue: weather.currently.pressure.toStringAsFixed(0),
-                feelsLikeValue:
-                    weather.currently.apparentTemperature.toStringAsFixed(0),
+                feelsLikeValue: weather.currently.apparentTemperature.toStringAsFixed(0),
                 uvValue: weather.currently.uvIndex.toStringAsFixed(2)),
             HourlyForecastView(hourlyForecast: hourlyForecast.sublist(1)),
-            DailyForecastView(
-                dailyForecast: weather.daily.data, aqiIcon: aqiForecast),
+            DailyForecastView(dailyForecast: weather.daily.data, aqiIcon: aqiForecast),
             Padding(
               padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-              child:
-                  AttributionView(name: photo.username, url: photo.profileUrl),
+              child: AttributionView(name: photo.username, url: photo.profileUrl),
             ),
           ],
         ),

@@ -13,10 +13,7 @@ class HourlyForecastView extends StatelessWidget {
     var scrollController = ScrollController();
 
     for (var item in hourlyForecast) {
-      var cell = HourlyCellView(
-          hour: item.getHour(),
-          weatherIcon: item.getIcon(),
-          temperature: item.getTemperature());
+      var cell = HourlyCellView(hour: item.getHour(), weatherIcon: item.getIcon(), temperature: item.getTemperature());
       hourlyCells.add(cell);
     }
 
@@ -39,11 +36,7 @@ class HourlyForecastView extends StatelessWidget {
 }
 
 class HourlyCellView extends StatelessWidget {
-  const HourlyCellView(
-      {super.key,
-      required this.hour,
-      required this.weatherIcon,
-      required this.temperature});
+  const HourlyCellView({super.key, required this.hour, required this.weatherIcon, required this.temperature});
   final String hour;
   final String weatherIcon;
   final String temperature;

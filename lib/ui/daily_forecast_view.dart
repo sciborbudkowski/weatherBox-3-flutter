@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
-import 'package:weatherbox/pirate/pirate_models.dart' as pirate;
+import 'package:weatherbox/pirate/pirate_models.dart' as pm;
+import 'package:weatherbox/pirate/weather_models.dart';
 import 'package:weatherbox/styles/styles.dart';
 import 'package:weatherbox/extensions/extensions.dart';
-import 'package:weatherbox/pirate/weather_models.dart';
 
 class DailyForecastView extends StatelessWidget {
-  const DailyForecastView(
-      {super.key, required this.dailyForecast, required this.aqiIcon});
-  final List<pirate.Datum> dailyForecast;
+  const DailyForecastView({super.key, required this.dailyForecast, required this.aqiIcon});
+  final List<pm.Datum> dailyForecast;
   final List<String> aqiIcon;
 
   @override
@@ -21,8 +20,7 @@ class DailyForecastView extends StatelessWidget {
         continue;
       }
 
-      var cell = DailyCellView(
-          forecast: item, aqiIcon: aqiIcon[counter], shadeOption: counter);
+      var cell = DailyCellView(forecast: item, aqiIcon: aqiIcon[counter], shadeOption: counter);
       dailyCells.add(cell);
     }
     return SizedBox(
@@ -39,19 +37,14 @@ class DailyForecastView extends StatelessWidget {
 }
 
 class DailyCellView extends StatelessWidget {
-  const DailyCellView(
-      {super.key,
-      required this.forecast,
-      required this.aqiIcon,
-      required this.shadeOption});
-  final pirate.Datum forecast;
+  const DailyCellView({super.key, required this.forecast, required this.aqiIcon, required this.shadeOption});
+  final pm.Datum forecast;
   final String aqiIcon;
   final int shadeOption;
 
   @override
   Widget build(BuildContext context) {
-    Color shadeColor =
-        shadeOption % 2 == 0 ? Colors.transparent : Colors.white10;
+    Color shadeColor = shadeOption % 2 == 0 ? Colors.transparent : Colors.white10;
 
     return Container(
       color: shadeColor,
@@ -75,23 +68,15 @@ class DailyCellView extends StatelessWidget {
               ],
             ),
           ),
-          Image(
-              image: AssetImage(Weather.getIconFor(forecast.icon)),
-              width: 50,
-              height: 50),
+          Image(image: AssetImage(Weather.getIconFor(forecast.icon)), width: 50, height: 50),
           Column(
             children: [
               Row(
                 children: [
                   Column(
                     children: [
-                      const Image(
-                          image:
-                              AssetImage('assets/images/sun_moon/sunrise.png'),
-                          width: 25,
-                          height: 25),
-                      Text(forecast.sunriseTime.toHourAndMinutes(),
-                          style: Style.dateTextStyle),
+                      const Image(image: AssetImage('assets/images/sun_moon/sunrise.png'), width: 25, height: 25),
+                      Text(forecast.sunriseTime.toHourAndMinutes(), style: Style.dateTextStyle),
                     ],
                   ),
                   const Divider(
@@ -101,13 +86,8 @@ class DailyCellView extends StatelessWidget {
                   ),
                   Column(
                     children: [
-                      const Image(
-                          image:
-                              AssetImage('assets/images/sun_moon/sunset.png'),
-                          width: 25,
-                          height: 25),
-                      Text(forecast.sunsetTime.toHourAndMinutes(),
-                          style: Style.dateTextStyle),
+                      const Image(image: AssetImage('assets/images/sun_moon/sunset.png'), width: 25, height: 25),
+                      Text(forecast.sunsetTime.toHourAndMinutes(), style: Style.dateTextStyle),
                     ],
                   ),
                 ],
@@ -145,10 +125,7 @@ class DailyCellView extends StatelessWidget {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image(
-                  image: AssetImage(Beaufort.getIconFor(forecast.windSpeed)),
-                  width: 25,
-                  height: 25),
+              Image(image: AssetImage(Beaufort.getIconFor(forecast.windSpeed)), width: 25, height: 25),
               Text(
                 '${forecast.windSpeed.toStringAsFixed(0)} km/h',
                 style: Style.dateTextStyle,

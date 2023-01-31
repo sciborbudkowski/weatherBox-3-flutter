@@ -3,6 +3,13 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class Style {
+  static const appNameTextStyle = TextStyle(
+    fontFamily: 'Nunito',
+    fontSize: 22.0,
+    fontWeight: FontWeight.w500,
+    color: Colors.lightBlue,
+  );
+
   static const locationTextStyle = TextStyle(
     fontFamily: 'Nunito',
     fontSize: 16.0,
