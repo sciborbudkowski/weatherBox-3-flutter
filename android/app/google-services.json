@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "231172437837",
+    "project_id": "weatherbox-flutter",
+    "storage_bucket": "weatherbox-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:231172437837:android:71108cac96bd5d44502904",
+        "android_client_info": {
+          "package_name": "com.example.weatherbox"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "231172437837-jf859h2tgfelinbf6sj463d2c7ab0h1u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCP_328Q6gcBnb0wUMh5ZXHBbMDfMO-tXU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "231172437837-jf859h2tgfelinbf6sj463d2c7ab0h1u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "231172437837-42acpu4idtc4geojcj1g2neped8tupns.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.weatherbox"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
