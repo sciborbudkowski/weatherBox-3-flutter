@@ -34,7 +34,6 @@ class MainView extends StatelessWidget {
     String locale = Localizations.localeOf(context).languageCode;
     print(locale);
     DateTime now = DateTime.now();
-    // DateFormat formatter = DateFormat.EEEE(locale).add_d() //('EEEE, dd MMMM yyyy').;
     initializeDateFormatting(locale);
     String date =
         '${DateFormat.EEEE(locale).format(now)}, ${DateFormat.d(locale).format(now)} ${DateFormat.MMMM(locale).format(now)} ${DateFormat.y(locale).format(now)}';

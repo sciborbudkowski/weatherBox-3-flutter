@@ -61,10 +61,10 @@ class _WeatherApp extends State<WeatherApp> {
             isDataLoaded = true;
             return getStack();
           } else {
-            return Center(
+            return const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   Image(image: AssetImage('assets/images/app_icon.png'), width: 100, height: 100),
                   Text('weatherBox', style: Style.appNameTextStyle),
                   Padding(
